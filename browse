@@ -1,21 +1,9 @@
-#!/usr/bin/env -S deno run --allow-run
+#!/usr/bin/env -S deno run --allow-run --allow-net
 import { exec } from "https://deno.land/x/exec/mod.ts";
 import { getId } from "./src/id.js";
 
 /**
  * A port of "powersearch" 0.2 to Deno.
- *
- * Version History:
- * -----------------------------------------------
- * | 0.2.1 |  6/26/2021 | * use URLSearchParams to serialize URL
- * -----------------------------------------------
- * | 0.2.0 |  6/26/2021 | * --big to look for big images
- * |       |            | * initial DuckDuckGo support
- * |       |            | * use DDG for "lucky" feat
- * -----------------------------------------------
- * | 0.1.0 |  6/25/2021 | * Initial import based on
- * |       |            |   powersearch 0.2 rework
- * |       |            | * change to unsafe by default
  *
  * @see why use DuckDuckGo https://stackoverflow.com/a/64861546/270302
  * @see original work      https://dra.vin/#/bookmarklets
@@ -86,7 +74,14 @@ for (let i = 0; i < e.length; i++) switch (e[i]) {
 		continue
 }
 
-if (tri("gi")) {
+if (tri("id")) {
+	const result = await getId(trim);
+	if(result) {
+		console.log(result);
+	} else {
+		console.error(`No id exists for ${result}`);
+	}
+} else if (tri("gi")) {
 	get(0);
 } else if(tri("gn")) {
 	get(1);
