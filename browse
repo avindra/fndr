@@ -1,7 +1,7 @@
 #!/usr/bin/env -S deno run --allow-run --allow-net
-import { exec } from "https://deno.land/x/exec/mod.ts";
 import { getId, findId } from "./src/id.js";
 import { read } from "./src/read.js";
+import { searchFor } from "./src/search.ts";
 
 /**
  * A port of "powersearch" 0.2 to Deno.
@@ -22,46 +22,7 @@ const tri = function(o) {
 let trim = t.replace(/--\S+/g, "").replace(/^\s*\S+\s*/, "");
 
 const  gs = "http://google.com/search?q=";
-const get = function(t) {
-	const i = ["images", "news", "maps"][t];
-	let e = "http://" + i + ".google.com/" + i;
-	const isBing = 3 == t;
-	const isDDG = 4 == t;
-	isBing && (e = "https://images.bing.com/");
-	isDDG && (e = "https://duckduckgo.com/");
-	let params = new URLSearchParams();
-	if (unsafe) {
-		if (isDDG) {
-			params.set("kp", "-2");
-		} else if(isBing) {
-			params.set("safesearch", "off");
-		} else { // assume google
-			params.set("safe", "images");
-		}
-	}
-	if (isDDG) {
-		params.set("iax", "images");
-		params.set("ia", "images");
-	}
-	if (isBig) {
-		if (isBing) {
-			params.set("qft", "+filterui:imagesize-custom_1920_1080");
-		} else if(isDDG) {
-			params.set("iaf", "size:Large");
-		} else { // assume google
-			params.set("tbs", "isz:lt,islt:2mp");
-		}
-	}
-	params.set("q", trim);
-	goto(e, "?" + params.toString());
-};
 
-const goto = async function(e = "http://www.", t = trim) {
-	const executor = unsafe ? `firefox -private-window` : "xdg-open";
-	const line = `${executor} "${e + t}"`;
-	console.log("running", line);
-	await exec(line);
-};
 
 const e = t.match(/--\S+/g) || [];
 for (let i = 0; i < e.length; i++) switch (e[i]) {
@@ -87,15 +48,15 @@ if (tri("id") || hasStdIn) {
 		console.error(`No id exists for ${result}`);
 	}
 } else if (tri("gi")) {
-	get(0);
+	searchFor(0, trim, isBig, unsafe);
 } else if(tri("gn")) {
-	get(1);
+	searchFor(1, trim, isBig, unsafe);
 } else if (tri("gm")) {
-	get(2);
+	searchFor(2, trim, isBig, unsafe);
 } else if(tri("bi")) {
-	get(3);
+	searchFor(3, trim, isBig, unsafe);
 } else if(tri("di")) {
-	get(4);
+	searchFor(4, trim, isBig, unsafe);
 } else if(tri("gs")) {
 	goto("https://google.com/search?q=");
 } else if( tri("slang")) {
@@ -110,7 +71,7 @@ if (tri("id") || hasStdIn) {
 } else if(tri("(first|lucky)")) {
 	//goto("https://google.com/search?btnI&q=");
 	goto("https://duckduckgo.com/?q=%5C");
-} else if( tri("ebook")) {
+} else if(tri("ebook")) {
 	goto(gs + encodeURIComponent('-inurl:htm -inurl:html intitle:index of("/ebooks"|"/book") (chm|pdf|zip) Last Modified '));
 } else if(tri("music")) {
 	goto(gs + encodeURIComponent("intitle:index.of last modified  parent directory (mp4|m4a|mp3|wma|ogg) -htm -html -php -asp "));
