@@ -70,6 +70,8 @@ if (chk("id") || hasStdIn) {
 	goto("https://youtube.com/results?search_query=", unsafe, trim);
 } else if(chk("wiki")) {
 	goto(`${first}site:wikipedia.org `, unsafe, trim);
+} else if(chk("data")) {
+	goto(`${first}site:wikidata.org `, unsafe, trim);
 } else if(chk("imdb")) {
 	goto(`${first}imdb `, unsafe, trim);
 } else if(chk("(first|lucky)")) {

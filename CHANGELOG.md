@@ -3,6 +3,7 @@
 ## 0.4.0 - unreleased
 
 * feat: enable reading ids from stdin
+* feat: `data` alias to search for Wikidata items
 * breaking: `gs` case removed
 
 ## 0.3.0 - 07/03/2021
