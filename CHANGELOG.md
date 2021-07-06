@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.4.0 - unreleased
+## 0.4.0 - 07/06/2021
 
 * feat: enable reading ids from stdin
 * feat: `data` alias to search for Wikidata items
