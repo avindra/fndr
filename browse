@@ -1,7 +1,7 @@
 #!/usr/bin/env -S deno run --allow-run --allow-net
 import { getId, findId } from "./src/id.js";
 import { read } from "./src/read.js";
-import { searchFor } from "./src/search.ts";
+import { searchFor, goto } from "./src/search.ts";
 
 /**
  * bitmask tested on Linux
@@ -18,8 +18,6 @@ const chk = function(o) {
 
 let trim = input.replace(/--\S+/g, "").replace(/^\s*\S+\s*/, "");
 
-const  gs = "http://google.com/search?q=";
-
 
 const e = input.match(/--\S+/g) || [];
 for (let i = 0; i < e.length; i++) switch (e[i]) {
@@ -35,10 +33,17 @@ for (let i = 0; i < e.length; i++) switch (e[i]) {
 		continue
 }
 
+
+/**
+ * use "https://google.com/search?btnI&q=" for google
+ * 
+ * @see use DuckDuckGo to avoid redirect warning https://stackoverflow.com/a/64861546/270302
+ */
+const first = "https://duckduckgo.com/?q=%5C";
+
 /**
  * main() pattern matching construct
  * 
- * @see why use DuckDuckGo https://stackoverflow.com/a/64861546/270302
  */
 if (chk("id") || hasStdIn) {
 	const data = await (hasStdIn ? read() : getId(trim));
@@ -59,26 +64,22 @@ if (chk("id") || hasStdIn) {
 	searchFor(3, trim, isBig, unsafe);
 } else if(chk("di")) {
 	searchFor(4, trim, isBig, unsafe);
-} else if(chk("gs")) {
-	goto("https://google.com/search?q=");
 } else if(chk("slang")) {
-	goto("https://urbandictionary.com/define.php?term=")
+	goto("https://urbandictionary.com/define.php?term=", unsafe, trim);
 } else if(chk("yt")) {
-	goto("https://youtube.com/results?search_query=")
+	goto("https://youtube.com/results?search_query=", unsafe, trim);
 } else if(chk("wiki")) {
-	goto("https://google.com/search?btnI&q=site:wikipedia.org ");
+	goto(`${first}site:wikipedia.org `, unsafe, trim);
 } else if(chk("imdb")) {
-	//goto("https://google.com/search?btnI&q=imdb ")
-	goto("https://duckduckgo.com/?q=%5Cimdb ");
+	goto(`${first}imdb `, unsafe, trim);
 } else if(chk("(first|lucky)")) {
-	//goto("https://google.com/search?btnI&q=");
-	goto("https://duckduckgo.com/?q=%5C");
+	goto(first, unsafe, trim);
 } else if(chk("ebook")) {
-	goto(gs + encodeURIComponent('-inurl:htm -inurl:html intitle:index of("/ebooks"|"/book") (chm|pdf|zip) Last Modified '));
+	goto(gs + encodeURIComponent('-inurl:htm -inurl:html intitle:index of("/ebooks"|"/book") (chm|pdf|zip) Last Modified '), unsafe);
 } else if(chk("music")) {
-	goto(gs + encodeURIComponent("intitle:index.of last modified  parent directory (mp4|m4a|mp3|wma|ogg) -htm -html -php -asp "));
+	goto(gs + encodeURIComponent("intitle:index.of last modified  parent directory (mp4|m4a|mp3|wma|ogg) -htm -html -php -asp "), unsafe);
 } else if(chk("torrents?")) {
-	goto("https://www.thepiratebay.org/search/", trim + "/0/7/0");
+	goto("https://www.thepiratebay.org/search/", trim + "/0/7/0", unsafe);
 }
 
 

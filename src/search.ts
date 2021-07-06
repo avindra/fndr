@@ -12,7 +12,7 @@ const engines = [
 /**
  * @permission exec
  */
-const goto = async function(base: string = "http://www.", path: string, unsafe: boolean) {
+export const goto = async function(base: string = "http://www.", unsafe: boolean, path: string = '') {
 	const executor = unsafe ? `firefox -private-window` : "xdg-open";
 	const line = `${executor} "${base + path}"`;
 	console.log("running", line);
@@ -63,5 +63,5 @@ export const searchFor = function(
 		}
 	}
 	params.set("q", query);
-	goto(e, "?" + params.toString(), unsafe);
+	goto(e, unsafe, "?" + params.toString());
 };

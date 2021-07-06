@@ -1,8 +1,9 @@
 # Changelog
 
-## 0.3.1 - unreleased
+## 0.4.0 - unreleased
 
 * feat: enable reading ids from stdin
+* breaking: `gs` case removed
 
 ## 0.3.0 - 07/03/2021
 
