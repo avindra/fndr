@@ -15,12 +15,11 @@ const bannedIds = [
 	"/m/0jg24" // basic "Image" concept
 ];
 
-export async function getId(input) {
-	const response = await fetch(`http://google.com/search?q=${input}`, {
-		headers
-	});
-	const text = await response.text();
 
+/**
+ * Find knowledge ID from source text
+ */
+export function findId(text) {
 	let results = text.match(/22\/[gm]\/[^\\]+/g);
 
 	if (results) {
@@ -35,4 +34,16 @@ export async function getId(input) {
 	}
 
 	return false;
+}
+
+
+/**
+ * @permission net
+ */
+export async function getId(input) {
+	const response = await fetch(`http://google.com/search?q=${input}`, {
+		headers
+	});
+	const text = await response.text();
+	return findId(text);
 }

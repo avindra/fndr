@@ -1,6 +1,7 @@
 #!/usr/bin/env -S deno run --allow-run --allow-net
 import { exec } from "https://deno.land/x/exec/mod.ts";
-import { getId } from "./src/id.js";
+import { getId, findId } from "./src/id.js";
+import { read } from "./src/read.js";
 
 /**
  * A port of "powersearch" 0.2 to Deno.
@@ -9,7 +10,9 @@ import { getId } from "./src/id.js";
  * @see original work      https://dra.vin/#/bookmarklets
  */
 
-const t = prompt("Where you off to?");
+const hasStdIn = Object.values(Deno.resources()).includes("stdin");
+
+const t = !hasStdIn && prompt("Where you off to?");
 let unsafe = true;
 let isBig = false;
 const tri = function(o) {
@@ -74,8 +77,10 @@ for (let i = 0; i < e.length; i++) switch (e[i]) {
 		continue
 }
 
-if (tri("id")) {
-	const result = await getId(trim);
+if (tri("id") || hasStdIn) {
+	const data = await (hasStdIn ? read() : getId(trim));
+	const result = findId(data);
+
 	if(result) {
 		console.log(result);
 	} else {
