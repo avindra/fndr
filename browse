@@ -3,11 +3,13 @@ import { getResults, findIds, findLink } from "./src/id.js";
 import { read } from "./src/read.js";
 import { searchFor, goto } from "./src/search.ts";
 
+const f = Deno.fstatSync(Deno.stdin);
+
 /**
- * bitmask tested on Linux
+ * Bitmask compatible with Linux
+ * for whatever reason, this needs to be === on MacOS
  */
-const devNo = Deno.fstatSync(Deno.stdin).dev;
-const hasStdIn = (devNo & 0b101) !== 0;
+const hasStdIn = (f.dev & 0b101) !== 0;
 
 const input = hasStdIn ? "" : prompt("Where you off to?") || "";
 let unsafe = true;
