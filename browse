@@ -4,27 +4,24 @@ import { read } from "./src/read.js";
 import { searchFor } from "./src/search.ts";
 
 /**
- * A port of "powersearch" 0.2 to Deno.
- *
- * @see why use DuckDuckGo https://stackoverflow.com/a/64861546/270302
- * @see original work      https://dra.vin/#/bookmarklets
+ * bitmask tested on Linux
  */
+const devNo = Deno.fstatSync(Deno.stdin).dev;
+const hasStdIn = (devNo & 0b101) !== 0;
 
-const hasStdIn = Object.values(Deno.resources()).includes("stdin");
-
-const t = !hasStdIn && prompt("Where you off to?");
+const input = hasStdIn ? "" : prompt("Where you off to?") || "";
 let unsafe = true;
 let isBig = false;
-const tri = function(o) {
-	return new RegExp("^" + o, "i").test(t)
+const chk = function(o) {
+	return new RegExp("^" + o, "i").test(input)
 }
 
-let trim = t.replace(/--\S+/g, "").replace(/^\s*\S+\s*/, "");
+let trim = input.replace(/--\S+/g, "").replace(/^\s*\S+\s*/, "");
 
 const  gs = "http://google.com/search?q=";
 
 
-const e = t.match(/--\S+/g) || [];
+const e = input.match(/--\S+/g) || [];
 for (let i = 0; i < e.length; i++) switch (e[i]) {
 	// TBD: plumb context from the page
 	case "--this":
@@ -38,7 +35,12 @@ for (let i = 0; i < e.length; i++) switch (e[i]) {
 		continue
 }
 
-if (tri("id") || hasStdIn) {
+/**
+ * main() pattern matching construct
+ * 
+ * @see why use DuckDuckGo https://stackoverflow.com/a/64861546/270302
+ */
+if (chk("id") || hasStdIn) {
 	const data = await (hasStdIn ? read() : getId(trim));
 	const result = findId(data);
 
@@ -47,35 +49,35 @@ if (tri("id") || hasStdIn) {
 	} else {
 		console.error(`No id exists for ${result}`);
 	}
-} else if (tri("gi")) {
+} else if (chk("gi")) {
 	searchFor(0, trim, isBig, unsafe);
-} else if(tri("gn")) {
+} else if(chk("gn")) {
 	searchFor(1, trim, isBig, unsafe);
-} else if (tri("gm")) {
+} else if (chk("gm")) {
 	searchFor(2, trim, isBig, unsafe);
-} else if(tri("bi")) {
+} else if(chk("bi")) {
 	searchFor(3, trim, isBig, unsafe);
-} else if(tri("di")) {
+} else if(chk("di")) {
 	searchFor(4, trim, isBig, unsafe);
-} else if(tri("gs")) {
+} else if(chk("gs")) {
 	goto("https://google.com/search?q=");
-} else if( tri("slang")) {
+} else if(chk("slang")) {
 	goto("https://urbandictionary.com/define.php?term=")
-} else if(tri("yt")) {
+} else if(chk("yt")) {
 	goto("https://youtube.com/results?search_query=")
-} else if(tri("wiki")) {
+} else if(chk("wiki")) {
 	goto("https://google.com/search?btnI&q=site:wikipedia.org ");
-} else if(tri("imdb")) {
+} else if(chk("imdb")) {
 	//goto("https://google.com/search?btnI&q=imdb ")
 	goto("https://duckduckgo.com/?q=%5Cimdb ");
-} else if(tri("(first|lucky)")) {
+} else if(chk("(first|lucky)")) {
 	//goto("https://google.com/search?btnI&q=");
 	goto("https://duckduckgo.com/?q=%5C");
-} else if(tri("ebook")) {
+} else if(chk("ebook")) {
 	goto(gs + encodeURIComponent('-inurl:htm -inurl:html intitle:index of("/ebooks"|"/book") (chm|pdf|zip) Last Modified '));
-} else if(tri("music")) {
+} else if(chk("music")) {
 	goto(gs + encodeURIComponent("intitle:index.of last modified  parent directory (mp4|m4a|mp3|wma|ogg) -htm -html -php -asp "));
-} else if(tri("torrents?")) {
+} else if(chk("torrents?")) {
 	goto("https://www.thepiratebay.org/search/", trim + "/0/7/0");
 }
 

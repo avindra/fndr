@@ -39,8 +39,6 @@ export const searchFor = function(
 	const e = engines[id];
 	const isBing = 3 == id;
 	const isDDG = 4 == id;
-	isBing && (e = "https://images.bing.com/");
-	isDDG && (e = "https://duckduckgo.com/");
 	let params = new URLSearchParams();
 	if (unsafe) {
 		if (isDDG) {
