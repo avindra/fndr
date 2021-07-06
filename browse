@@ -1,5 +1,5 @@
 #!/usr/bin/env -S deno run --allow-run --allow-net
-import { getId, findId } from "./src/id.js";
+import { getResults, findIds, findLink } from "./src/id.js";
 import { read } from "./src/read.js";
 import { searchFor, goto } from "./src/search.ts";
 
@@ -35,25 +35,27 @@ for (let i = 0; i < e.length; i++) switch (e[i]) {
 
 
 /**
+ * In the browser port,
  * use "https://google.com/search?btnI&q=" for google
- * 
+ * use "https://duckduckgo.com/?q=%5C" for duckduckgo
+ *
  * @see use DuckDuckGo to avoid redirect warning https://stackoverflow.com/a/64861546/270302
  */
-const first = "https://duckduckgo.com/?q=%5C";
+async function lucky(s) {
+	const data = await getResults(s);
+	const link = findLink(data);
+	if (link) {
+		goto(link, unsafe);
+	}
+}
 
 /**
  * main() pattern matching construct
  * 
  */
 if (chk("id") || hasStdIn) {
-	const data = await (hasStdIn ? read() : getId(trim));
-	const result = findId(data);
-
-	if(result) {
-		console.log(result);
-	} else {
-		console.error(`No id exists for ${result}`);
-	}
+	const data = await (hasStdIn ? read() : getResults(trim));
+	findIds(data);
 } else if (chk("gi")) {
 	searchFor(0, trim, isBig, unsafe);
 } else if(chk("gn")) {
@@ -69,13 +71,13 @@ if (chk("id") || hasStdIn) {
 } else if(chk("yt")) {
 	goto("https://youtube.com/results?search_query=", unsafe, trim);
 } else if(chk("wiki")) {
-	goto(`${first}site:wikipedia.org `, unsafe, trim);
+	lucky(`site:wikipedia.org ${trim}`, unsafe);
 } else if(chk("data")) {
-	goto(`${first}site:wikidata.org `, unsafe, trim);
+	lucky(`site:wikidata.org ${trim}`, unsafe);
 } else if(chk("imdb")) {
-	goto(`${first}imdb `, unsafe, trim);
+	lucky(`imdb ${trim}`, unsafe);
 } else if(chk("(first|lucky)")) {
-	goto(first, unsafe, trim);
+	lucky(trim, unsafe);
 } else if(chk("ebook")) {
 	goto(gs + encodeURIComponent('-inurl:htm -inurl:html intitle:index of("/ebooks"|"/book") (chm|pdf|zip) Last Modified '), unsafe);
 } else if(chk("music")) {

@@ -4,6 +4,7 @@
 
 * feat: enable reading ids from stdin
 * feat: `data` alias to search for Wikidata items
+* feat: faster "first result" querying
 * breaking: `gs` case removed
 
 ## 0.3.0 - 07/03/2021
