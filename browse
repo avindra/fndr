@@ -5,11 +5,7 @@ import { searchFor, goto } from "./src/search.ts";
 
 const f = Deno.fstatSync(Deno.stdin);
 
-/**
- * Bitmask compatible with Linux
- * for whatever reason, this needs to be === on MacOS
- */
-const hasStdIn = (f.dev & 0b101) !== 0;
+const hasStdIn = f.size > 0;
 
 const input = hasStdIn ? "" : prompt("Where you off to?") || "";
 let unsafe = true;
@@ -71,7 +67,13 @@ if (chk("id") || hasStdIn) {
 } else if(chk("slang")) {
 	goto("https://urbandictionary.com/define.php?term=", unsafe, trim);
 } else if(chk("yt")) {
-	goto("https://youtube.com/results?search_query=", unsafe, trim);
+	let ytbase = "https://youtube.com/results?";
+	if (isBig) {
+		ytbase += "sp=EgJwAQ%253D%253D&";
+	}
+	ytbase += "search_query=";
+
+	goto(ytbase, unsafe = false, trim);
 } else if(chk("wiki")) {
 	lucky(`site:wikipedia.org ${trim}`, unsafe);
 } else if(chk("data")) {
