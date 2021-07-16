@@ -12,24 +12,28 @@ function getLinks(text) {
 const ids = {
 	"facebook.com": /facebook.com\/pages\/(.+)/,
 	"youtube.com": /youtube.com\/channel\/(.+)/,
-	"instagram.com": /instagram.com\/([^\/]+)/
+	"instagram.com": /instagram.com\/([^\/]+)/,
+	"vimeo.com": /vimeo.com\/([^\/]+)/,
+	"pinterest.de": /pinterest.de\/(^\/]+)/,
+	"tripadvisor.at": /tripadvisor.at\/(^\/]+)/,
 }
 
 export const getSocial = (body) => {
 	return [...new Set(getLinks(body))].filter(link => {
-		return /\.(facebook|instagram|youtube|twitter|google)/.test(link)
-
-	}).map(link => {
 		try {
 			const u = new URL(link);
 			const base = u.host.replace('www.', '');
-			if (base in ids) {
-				const reg = ids[base];
-				if (reg.test(link)) {
-					return [base, link.match(reg)[1]];
-				}
-			}
+			return base in ids;
 		} catch(e) {} // URL throws on malformed URLS, just ignore for now
+
+		return false;
+	}).map(link => {
+		const u = new URL(link);
+		const base = u.host.replace('www.', '');
+		const reg = ids[base];
+		if (reg.test(link)) {
+			return [base, link.match(reg)[1]];
+		}
 
 		return [null, link];
 	});
