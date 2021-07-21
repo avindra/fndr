@@ -9,14 +9,15 @@ function getLinks(text) {
 }
 
 
+const tripAdvisor = /(g\d+-d\d+)/;
 const ids = {
 	"facebook.com": /facebook.com\/pages\/(.+)/,
 	"youtube.com": /youtube.com\/channel\/(.+)/,
 	"instagram.com": /instagram.com\/([^\/]+)/,
 	"vimeo.com": /vimeo.com\/([^\/]+)/,
 	"pinterest.de": /pinterest.de\/(^\/]+)/,
-	"tripadvisor.at": /tripadvisor.at\/(^\/]+)/,
-	"tripadvisor.com": /(g\d+-d\d+)/,
+	"tripadvisor.at": tripAdvisor,
+	"tripadvisor.com": tripAdvisor,
 }
 
 export const getSocial = (body) => {
@@ -25,7 +26,9 @@ export const getSocial = (body) => {
 			try {
 				const u = new URL(link);
 				// drop subdomain specifications
-				u.host = u.host.replace(/(.+)\.(.+)\.com/, '$2.com');
+				const rootDomain = u.host.replace(/^(.+)\.(.+)\.(.+)$/, `$2.$3`);
+
+				u.host = rootDomain;
 				return u.toString();
 			} catch(e) {
 				return link;
