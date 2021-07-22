@@ -16,6 +16,7 @@ const ids = {
 	"instagram.com": /instagram.com\/([^\/]+)/,
 	"vimeo.com": /vimeo.com\/([^\/]+)/,
 	"pinterest.de": /pinterest.de\/(^\/]+)/,
+	"twitter.com": /twitter.com\/(^\/]+)/,
 	"tripadvisor.at": tripAdvisor,
 	"tripadvisor.com": tripAdvisor,
 }
