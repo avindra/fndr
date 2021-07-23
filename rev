@@ -1,0 +1,9 @@
+#!/usr/bin/sh
+
+
+if [ -t 0 ]; then
+	echo "no file given"
+	exit 1
+else
+	curl -F encoded_image=@/dev/stdin https://www.google.com/searchbyimage/upload
+fi
