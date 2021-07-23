@@ -17,6 +17,9 @@ const ids = {
 	"vimeo.com": /vimeo.com\/([^\/]+)/,
 	"pinterest.de": /pinterest.de\/(^\/]+)/,
 	"twitter.com": /twitter.com\/(^\/]+)/,
+	// google+
+	"google.com": /google.com\/\+(.+)/,
+	"linkedin.com": /linkedin.com\/company(?:-beta)?\/(^\/]+)/,
 	"tripadvisor.at": tripAdvisor,
 	"tripadvisor.com": tripAdvisor,
 }
