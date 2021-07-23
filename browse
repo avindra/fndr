@@ -51,19 +51,21 @@ async function lucky(s) {
 /**
  * main() pattern matching construct
  * 
+ * note: careful of overlapping identifiers
  */
-if (chk("i")) {
+
+if(chk("x")) {
+	console.log(getSocial(await read()));
+} else if (chk("id")) {
+	const data = await (hasStdIn ? read() : getResults(trim));
+	findIds(data);
+} else if (chk("i")) {
 	try {
 		const u = new URL("https://images.google.com/searchbyimage?image_url=" + encodeURIComponent(await read()));
 		console.log(u.toString());
 	} catch(err) {
 		console.log("invalid URL");
 	}
-} else if(chk("x")) {
-	console.log(getSocial(await read()));
-} else if (chk("id") || hasStdIn) {
-	const data = await (hasStdIn ? read() : getResults(trim));
-	findIds(data);
 } else if (chk("gi")) {
 	searchFor(0, trim, isBig, unsafe);
 } else if(chk("gn")) {
