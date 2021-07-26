@@ -16,12 +16,14 @@ const ids = {
 	"instagram.com": /instagram.com\/([^\/]+)/,
 	"vimeo.com": /vimeo.com\/([^\/]+)/,
 	"pinterest.de": /pinterest.de\/(^\/]+)/,
+	"pinterest.com": /pinterest.com\/(^\/]+)/,
 	"twitter.com": /twitter.com\/(^\/]+)/,
 	// google+
 	"google.com": /google.com\/\+(.+)/,
 	"linkedin.com": /linkedin.com\/company(?:-beta)?\/(^\/]+)/,
 	"tripadvisor.at": tripAdvisor,
 	"tripadvisor.com": tripAdvisor,
+	"tiktok.com": /tiktok.com\/\@(.+)/,
 }
 
 export const getSocial = (body) => {
