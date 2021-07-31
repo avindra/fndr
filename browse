@@ -3,6 +3,7 @@ import { getResults, findIds, findLink } from "./src/id.js";
 import { read } from "./src/read.js";
 import { searchFor, goto } from "./src/search.ts";
 import {getSocial} from "./src/xtract.js";
+import {rev} from './src/rev.js';
 
 const f = Deno.fstatSync(Deno.stdin);
 
@@ -66,6 +67,8 @@ if(chk("x")) {
 	} catch(err) {
 		console.log("invalid URL");
 	}
+} else if(chk("rev")) {
+	await rev();
 } else if (chk("gi")) {
 	searchFor(0, trim, isBig, unsafe);
 } else if(chk("gn")) {
