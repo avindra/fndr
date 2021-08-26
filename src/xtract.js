@@ -18,6 +18,9 @@ const ids = {
 	"pinterest.de": /pinterest.de\/(^\/]+)/,
 	"pinterest.com": /pinterest.com\/(^\/]+)/,
 	"twitter.com": /twitter.com\/(^\/]+)/,
+	// mobile apps
+	"play.google.com": /play.google.com\/store\/apps\/details\?id=([^&]+)/,
+	"itunes.apple.com": /itunes.apple.com\/.+\/app\/.+\/id(\d+)/,
 	// google+
 	"google.com": /google.com\/\+(.+)/,
 	"linkedin.com": /linkedin.com\/company(?:-beta)?\/(^\/]+)/,
