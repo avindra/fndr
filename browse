@@ -3,6 +3,7 @@ import { getResults, findIds, findLink } from "./src/id.js";
 import { read } from "./src/read.js";
 import { searchFor, goto } from "./src/search.ts";
 import {getSocial} from "./src/xtract.js";
+import {getClean} from "./src/qs.js";
 import {rev} from './src/rev.js';
 
 const f = Deno.fstatSync(Deno.stdin);
@@ -60,6 +61,8 @@ if(chk("x")) {
 } else if (chk("id")) {
 	const data = await (hasStdIn ? read() : getResults(trim));
 	findIds(data);
+} else if (chk("qs")) {
+	console.log(getClean(await read()));
 } else if (chk("i")) {
 	try {
 		const u = new URL("https://images.google.com/searchbyimage?image_url=" + encodeURIComponent(await read()));

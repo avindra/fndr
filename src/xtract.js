@@ -27,6 +27,7 @@ const ids = {
 	"tripadvisor.at": tripAdvisor,
 	"tripadvisor.com": tripAdvisor,
 	"tiktok.com": /tiktok.com\/\@(.+)/,
+	"tumblr.com": /(.+)\.tumblr\.com/,
 }
 
 export const getSocial = (body) => {
@@ -56,7 +57,7 @@ export const getSocial = (body) => {
 		const base = u.host;
 		const reg = ids[base];
 		if (reg.test(link)) {
-			return [base, link.match(reg)[1]];
+			return [base, link.match(reg)];
 		}
 
 		return [null, link];
