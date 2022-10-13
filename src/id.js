@@ -8,7 +8,7 @@
 const kgmbase = `https://www.google.com/search?kgmid=`;
 
 const headers = new Headers({
-	"User-Agent" : "Mozilla/5.0 (X11; Linux x86_64; rv:89.0) Gecko/20100101 Firefox/89.0"
+	"User-Agent" : "Mozilla/5.0 (X11; Linux x86_64; rv:105.0) Gecko/20100101 Firefox/105.0"
 });
 
 const bannedIds = [
@@ -19,8 +19,8 @@ const bannedIds = [
  * get only the first link
  */
 export function findLink(text) {
-	const links = (text.match(/href="[^"]+" data-ved/g) || [])
-		.map(s => s.substring(6, s.length -10))
+		const links = (text.match(/href="[^"]+" data-jsarwt/g) || [])
+		.map(s => s.substring(6, s.length -13))
 		.filter(l => l && !l.startsWith("/") && !/\.googl/.test(new URL(l).host));
 	return links.length > 0 ? links[0] : '';
 }

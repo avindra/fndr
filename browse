@@ -50,6 +50,8 @@ async function lucky(s) {
 	}
 }
 
+const  gs = "http://google.com/search?q=";
+
 /**
  * main() pattern matching construct
  * 
@@ -63,7 +65,7 @@ if(chk("x")) {
 	findIds(data);
 } else if (chk("qs")) {
 	console.log(getClean(await read()));
-} else if (chk("i")) {
+} else if (chk("img")) {
 	try {
 		const u = new URL("https://images.google.com/searchbyimage?image_url=" + encodeURIComponent(await read()));
 		console.log(u.toString());
