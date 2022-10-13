@@ -8,9 +8,9 @@ import {rev} from './src/rev.js';
 
 const f = Deno.fstatSync(Deno.stdin);
 
-const hasStdIn = (f.dev & 0b101) !== 0;
-
+const hasStdIn = f.rdev === 0;
 const input = hasStdIn ? Deno.args[0] || '' : prompt("Where you off to?");
+
 let unsafe = true;
 let isBig = false;
 const chk = function(o) {
