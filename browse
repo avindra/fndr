@@ -107,7 +107,7 @@ if(chk("x")) {
 } else if(chk("music")) {
 	goto(gs + encodeURIComponent("intitle:index.of last modified  parent directory (mp4|m4a|mp3|wma|ogg) -htm -html -php -asp "), unsafe);
 } else if(chk("torrents?")) {
-	goto("https://www.thepiratebay.org/search/", trim + "/0/7/0", unsafe);
+	goto("https://thepiratebay.org/search.php?q=" + trim);
 } 
 
 
