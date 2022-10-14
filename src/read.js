@@ -1,4 +1,4 @@
-import { readLines } from "https://deno.land/std@0.100.0/io/bufio.ts";
+import { readLines } from "https://deno.land/std@0.159.0/io/buffer.ts?s=readLines";
 
 export async function read() {
 	let body = '';
