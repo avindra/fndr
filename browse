@@ -2,38 +2,37 @@
 import { getResults, findIds, findLink } from "./src/id.js";
 import { read } from "./src/read.js";
 import { searchFor, goto } from "./src/search.ts";
-import {getSocial} from "./src/xtract.js";
-import {getClean} from "./src/qs.js";
-import {rev} from './src/rev.js';
+import { getSocial } from "./src/xtract.js";
+import { getClean } from "./src/qs.js";
+import { rev } from "./src/rev.js";
 
 const f = Deno.fstatSync(Deno.stdin);
 
 const hasStdIn = f.rdev === 0;
-const input = hasStdIn ? Deno.args[0] || '' : prompt("Where you off to?");
+const input = hasStdIn ? Deno.args[0] || "" : prompt("Where you off to?");
 
 let unsafe = true;
 let isBig = false;
-const chk = function(o) {
-	return new RegExp("^" + o, "i").test(input)
-}
+const chk = function (o) {
+	return new RegExp("^" + o, "i").test(input);
+};
 
 let trim = input.replace(/--\S+/g, "").replace(/^\s*\S+\s*/, "");
 
-
 const e = input.match(/--\S+/g) || [];
-for (let i = 0; i < e.length; i++) switch (e[i]) {
-	// TBD: plumb context from the page
-	case "--this":
-		trim += " site:" + document.domain;
-		continue;
-	case "--safe":
-		unsafe = false;
-		continue
-	case "--big":
-		isBig = true;
-		continue
-}
-
+for (let i = 0; i < e.length; i++)
+	switch (e[i]) {
+		// TBD: plumb context from the page
+		case "--this":
+			trim += " site:" + document.domain;
+			continue;
+		case "--safe":
+			unsafe = false;
+			continue;
+		case "--big":
+			isBig = true;
+			continue;
+	}
 
 /**
  * In the browser port,
@@ -50,15 +49,15 @@ async function lucky(s) {
 	}
 }
 
-const  gs = "http://google.com/search?q=";
+const gs = "http://google.com/search?q=";
 
 /**
  * main() pattern matching construct
- * 
+ *
  * note: careful of overlapping identifiers
  */
 
-if(chk("x")) {
+if (chk("x")) {
 	console.log(getSocial(await read()));
 } else if (chk("id")) {
 	const data = await (hasStdIn ? read() : getResults(trim));
@@ -67,49 +66,63 @@ if(chk("x")) {
 	console.log(getClean(await read()));
 } else if (chk("img")) {
 	try {
-		const u = new URL("https://images.google.com/searchbyimage?image_url=" + encodeURIComponent(await read()));
+		const u = new URL(
+			"https://images.google.com/searchbyimage?image_url=" +
+				encodeURIComponent(await read()),
+		);
 		console.log(u.toString());
-	} catch(err) {
+	} catch (err) {
 		console.log("invalid URL");
 	}
-} else if(chk("rev")) {
+} else if (chk("rev")) {
 	await rev();
 } else if (chk("gi")) {
 	searchFor(0, trim, isBig, unsafe);
-} else if(chk("gn")) {
+} else if (chk("gn")) {
 	searchFor(1, trim, isBig, unsafe);
 } else if (chk("gm")) {
 	searchFor(2, trim, isBig, unsafe);
-} else if(chk("bi")) {
+} else if (chk("bi")) {
 	searchFor(3, trim, isBig, unsafe);
-} else if(chk("di")) {
+} else if (chk("di")) {
 	searchFor(4, trim, isBig, unsafe);
-} else if(chk("slang")) {
+} else if (chk("slang")) {
 	goto("https://urbandictionary.com/define.php?term=", unsafe, trim);
-} else if(chk("yt")) {
+} else if (chk("yt")) {
 	let ytbase = "https://youtube.com/results?";
 	if (isBig) {
 		ytbase += "sp=EgJwAQ%253D%253D&";
 	}
 	ytbase += "search_query=";
 
-	goto(ytbase, unsafe = false, trim);
-} else if(chk("wiki")) {
+	goto(ytbase, (unsafe = false), trim);
+} else if (chk("wiki")) {
 	lucky(`site:wikipedia.org ${trim}`, unsafe);
-} else if(chk("data")) {
+} else if (chk("data")) {
 	lucky(`site:wikidata.org ${trim}`, unsafe);
-} else if(chk("imdb")) {
+} else if (chk("imdb")) {
 	lucky(`imdb ${trim}`, unsafe);
-} else if(chk("(first|lucky)")) {
+} else if (chk("(first|lucky)")) {
 	lucky(trim, unsafe);
-} else if(chk("ebook")) {
-	goto(gs + encodeURIComponent('-inurl:htm -inurl:html intitle:index of("/ebooks"|"/book") (chm|pdf|zip) Last Modified '), unsafe);
-} else if(chk("music")) {
-	goto(gs + encodeURIComponent("intitle:index.of last modified  parent directory (mp4|m4a|mp3|wma|ogg) -htm -html -php -asp "), unsafe);
-} else if(chk("torrents?")) {
+} else if (chk("ebook")) {
+	goto(
+		gs +
+			encodeURIComponent(
+				'-inurl:htm -inurl:html intitle:index of("/ebooks"|"/book") (chm|pdf|zip) Last Modified ',
+			),
+		unsafe,
+	);
+} else if (chk("music")) {
+	goto(
+		gs +
+			encodeURIComponent(
+				"intitle:index.of last modified  parent directory (mp4|m4a|mp3|wma|ogg) -htm -html -php -asp ",
+			),
+		unsafe,
+	);
+} else if (chk("torrents?")) {
 	goto("https://thepiratebay.org/search.php?q=" + trim);
-} 
-
+}
 
 /**
  * TBD: reverse-image search via
