@@ -11,7 +11,7 @@ export const rev = async () => {
 			"curl",
 			"-F",
 			"encoded_image=@/dev/stdin",
-			"https://www.google.com/searchbyimage/upload"
+			"https://lens.google.com/upload"
 		],
 		stdout: "piped",
 		stdin: "piped"
