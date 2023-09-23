@@ -1,9 +1,10 @@
-import { readLines } from "https://deno.land/std@0.159.0/io/buffer.ts?s=readLines";
 
 export async function read() {
+	const decoder = new TextDecoder();
 	let body = '';
-	for await (const line of readLines(Deno.stdin)) {
-		body += line;
+	for await (const chunk of Deno.stdin.readable) {
+		body += decoder.decode(chunk);
 	}
 	return body;
 }
+
